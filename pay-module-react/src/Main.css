@@ -1,0 +1,9 @@
+.container div{
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.container div button{
+    min-width:100px;
+    max-width: 200px;
+}
