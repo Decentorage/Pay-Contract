@@ -4,32 +4,30 @@ contract web2decentorage {
     address public decentorage;
     address public webUser;
     address[] public storageNodes;
-    uint[] paymentDates;
     uint userValue;  //this value in wei
-    uint storageNodeValue;
-    uint constant oneWeek = 604800;
+    uint percentage;
     
-    function web2decentorage(uint _userValue, uint _storageNodeValue) public {
+    // backend (done)
+    function web2decentorage(uint _userValue) public {
         userValue = _userValue;
-        storageNodeValue = _storageNodeValue;
         decentorage = msg.sender;   //decentorage ID that will manage this contract
+        percentage = 5;
     }
     
+    // frontend (done)
     function userPay() public payable {
         require(msg.value > userValue);     //require on the amount of money the user should pay
         webUser = msg.sender;               //save the user ID
+        decentorage.transfer(percentage*this.balance/100);
     }
 
-    //assumming these two function will be called in order and next to each other    
+    //backend (done) 
     function addStorageNode(address A) public restricted {
         storageNodes.push(A);
     }
-    function addPaymentDate(uint _paymentDate) public restricted {
-        paymentDates.push(now + _paymentDate);
-    }
-    //////////////////////////////////////////////////////////////////////////////
 
-    function deleteStorageNode(address A) public {
+    //backend (done) 
+    function deleteStorageNode(address A) public restricted {
         for(uint i=0; i<storageNodes.length; i++){
             if(storageNodes[i] == A){
                 storageNodes[i] = storageNodes[storageNodes.length-1];
@@ -40,70 +38,47 @@ contract web2decentorage {
         }
     }
 
-    function deletePaymentDate(address A) public {
-        for(uint i=0; i<storageNodes.length; i++){
-            if(storageNodes[i] == A){
-                paymentDates[i] = paymentDates[paymentDates.length-1];
-                delete paymentDates[paymentDates.length - 1];
-                paymentDates.length--;
-                return;
-            }
-        }
-    }
-
-    function swapStorageNode(address Old, address New, uint _paymentDate) public restricted {
-        deletePaymentDate(Old);
-        deleteStorageNode(Old);
-        addStorageNode(New);
-        addPaymentDate(_paymentDate);
+    //backend (done)
+    function swapStorageNode(address A, uint256 index) public restricted {
+        storageNodes[index] = A;
     }
     
-    function payStorageNode(address A) public restricted {
+    //backend (done)
+    function payStorageNode(address A, uint payment) public restricted {
         for(uint i=0; i<storageNodes.length; i++){
             if(storageNodes[i] == A){
-                require(now >= paymentDates[i]);
-                paymentDates[i] += oneWeek;
-                storageNodes[i].transfer(storageNodeValue);   //amount of money should be sent to a storage node
+                storageNodes[i].transfer(payment);   //amount of money should be sent to a storage node
             }
         }
     }
 
+    //backend (done)
+    function terminate() public restricted {
+        decentorage.transfer(this.balance);
+    }
+
+    //backend (done)
     function getStorageNodes() public view returns(address[]) {
         return storageNodes;
     }
 
-    function getPaymentDates() public view returns(uint[]) {
-        return paymentDates;
-    }
-
+    //backend (done)
     function getDecentorage() public view returns(address) {
         return decentorage;
     }
 
+    //backend (done)
     function getwebUser() public view returns(address) {
         return webUser;
     }
 
+    //backend (done)
     function getBalance() public view returns(uint) {
         return this.balance;
-    }
-
-    function inNodes(address A) public returns(bool) {
-        for(uint i = 0 ; i < storageNodes.length ; i++){
-            if(storageNodes[i] == A){
-                return true;
-            }
-        }
-        return false;
     }
     
     modifier restricted() {
         require(msg.sender == decentorage);
-        _;
-    }
-
-    modifier storageRestricted() {
-        require(inNodes(msg.sender));
         _;
     }
 }
