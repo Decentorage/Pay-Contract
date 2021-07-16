@@ -1,0 +1,24 @@
+body{
+    background-color: #222158;
+}
+
+.signup-card {
+    margin: 0 auto;
+    margin-top: 20px;
+    align-self: middle;
+    text-align: center;
+    padding: 20px 0;
+    border-color: #F46727;
+    border-width: 3px;
+}
+
+.input-style{
+    display: block; 
+    margin: 0 auto;
+}
+
+.buttons-style {
+    border-color: #F46727;
+    background-color: #222158;
+    color: #F46727;
+}

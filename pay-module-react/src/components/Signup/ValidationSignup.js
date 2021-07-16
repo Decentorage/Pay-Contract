@@ -15,6 +15,14 @@ const Validation = (values) => {
         errors.confirm="password with confirm password do not match"
     }
 
+    if(values.selection === 'storage' && !values.availableSpace){
+        errors.availableSpace="no available space specified"
+    }
+
+    if(values.selection === 'storage' && !values.walletAddress){
+        errors.walletAddress="no wallet address specified"
+    }
+
     return errors;
 }
 

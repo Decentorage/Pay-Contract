@@ -38,8 +38,10 @@
     ]
   },
   "devDependencies": {
+    "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "react-bootstrap": "^1.6.1",
+    "react-router": "^5.2.0",
     "solc": "^0.8.6"
   }
 }

@@ -1,3 +1,11 @@
+.Navbar {
+    background-color: orange;
+}
+
+.logo{
+    width: inherit;
+}
+
 .container div{
     width: fit-content;
     margin: 0 auto;
