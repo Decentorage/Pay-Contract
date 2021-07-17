@@ -1,32 +1,130 @@
 import { useState, useEffect } from 'react';
-import { Navbar, Container, Row, Col, Button } from 'react-bootstrap'
+import { Redirect } from 'react-router-dom';
+import { Navbar, Container, Row, Col, Button, Table } from 'react-bootstrap'
 import logo from '../../decentorage.png';
+import axios from 'axios';
 import web3 from '../contract/web3';
+import abi from '../../abi';
+import url from '../../url'
 import './User.css';
 
 
 function User() {
     useEffect(() => {
         getContracts()
+        getPenddingContracts()
     }, []);
 
     const [contracts, setContracts] = useState([]);
+    const [pendding, setPendding] = useState([]);
+    const [values, setvalues] = useState({
+        loggedout:false,
+        pending:false,
+        active:false
+    });
 
-    const logOut = () => {
-
+    const logOut = (event) => {
+        event.preventDefault();
+        localStorage.removeItem('accessToken');
+        values.loggedout = true;
+        setvalues(values);
+        console.log(values.loggedout);
+        console.log("here")
     }
 
-    const payforCreatingContract = async () => {
-        // TODO: request for an address for decentorage addresss
+    // this function needs to be tested 
+    // did not got tested for two reasons first no data 
+    // second the api call does a lot of things we do not need for now
+    const payForContract = async (contractAddress, payLimit) => {
+        let contract = new web3.eth.Contract(abi, contractAddress);
         const accounts = await web3.eth.getAccounts();
-        web3.eth.sendTransaction({to: '0x0ffAF5741968f1865656a0f435d40b59CC872A6d', from: accounts[0], value: 500000000000000000});
+        await contract.methods.userPay().send({
+        from: accounts[0],
+        value: payLimit
+        });
+        axios.get(url + '/user/payContract',{
+            headers: {
+              'token': `${localStorage.getItem('accessToken')}`
+            }
+          }).then((response) => {
+            console.log(response.status, response.data)
+        }).catch(error => {
+            console.log('There was an error!', error);
+        });
     }
 
-    // TODO: this function should be async
+    const payforCreatingContract = () => {
+        var decentorageAddress;
+        axios.get(url + '/user/getDecentorageWalletAddress',{
+            headers: {
+              'token': `${localStorage.getItem('accessToken')}`
+            }
+          }).then(async (response) => {
+            console.log(response.status, response.data);
+            decentorageAddress = response.data["decentorage_wallet_address"]
+            const accounts = await web3.eth.getAccounts();
+            // TODO: get the gas price and calculate the value of the contract deployment
+            web3.eth.sendTransaction({to: decentorageAddress, from: accounts[0], value: 36000000});
+        }).catch(error => {
+            console.log('There was an error!', error);
+        });
+    }
+
     const getContracts = () => {
-        // request to contracts active and requested
-        const contracts = ["contract1", "contract2", "contract3"];
-        setContracts(contracts);
+        axios.get(url + '/user/getFiles',{
+            headers: {
+              'token': `${localStorage.getItem('accessToken')}`
+            }
+          }).then((response) => {
+            console.log(response.status, response.data);
+            const contracts = response.data;
+            // setContracts(contracts);
+            values.active = true;
+            setvalues(values);
+
+            const itemRows = [];
+            for (let contract of contracts) {
+              const row = (
+                <tr key={contract.id}>
+                    <td key={1}>{contract.filename}</td>
+                    <td key={2}>{contract.size}</td>
+                    <td key={3}>{contract.download_count}</td>
+                    <td key={4}>{contract.duration_in_months}</td>
+                </tr>
+              );
+              itemRows.push(row);
+            }
+            setContracts(itemRows);
+        }).catch(error => {
+            console.log('There was an error!', error);
+        });
+    }
+
+    const getPenddingContracts = () => {
+        axios.get(url + '/user/getContract',{
+            headers: {
+              'token': `${localStorage.getItem('accessToken')}`
+            }
+          }).then((response) => {
+            console.log(response.status, response.data);
+            const contracts = response.data;
+            // setPendding(contracts);
+            values.pending = true;
+            setvalues(values);
+            const itemRows = [];
+            for (let contract of contracts) {
+              const row = (
+                <tr key={contract.id}>
+                    <td key={1}>{contract.filename}</td>
+                    <td key={2}><Button onClick={() => payForContract(contract.contract_addresss, contract.price)}>pay for this file contract</Button></td>
+                </tr>
+              );
+              itemRows.push(row);
+            }
+            setPendding(itemRows);
+        }).catch(error => {
+            console.log('There was an error!', error);
+        });
     }
 
     return (
@@ -46,10 +144,29 @@ function User() {
             <Button size="lg" className="pay-for-contract-button" onClick={payforCreatingContract}>pay for contract</Button>
         </div>
         <Row>
-            <Col sm={6}>{contracts.map(contract => (<h1>{contract}</h1>))}</Col>
-            <Col sm={6}>{contracts.map(contract => (<h1>{contract}</h1>))}</Col>
+            <Col sm={12}>{ values.pending &&  <Table striped bordered hover variant="dark">
+                    <tr>
+                        <th>filename</th>
+                        <th>pay button</th>
+                    </tr>
+                    {pendding}
+                </Table>}</Col>
         </Row>
+        <Row>
+            <Col sm={12}>{ values.active &&  <Table striped bordered hover variant="dark">
+                    <tr>
+                        <th>filename</th>
+                        <th>size (in KB)</th>
+                        <th>download count</th>
+                        <th>duration in months</th>
+                    </tr>
+                    {contracts}
+                </Table>}
+            </Col>
+        </Row>
+        {values.loggedout && <Redirect to='/signin'/>}
         </>
+        
     );
 }
 

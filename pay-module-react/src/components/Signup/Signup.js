@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Validation from './ValidationSignup';
 import logo from '../../decentorage.png';
 import axios from 'axios';
+import url from '../../url';
 import './Signup.css'
 
 function Signup() {
@@ -24,7 +25,7 @@ function Signup() {
         seterrors(stat);
         if(Object.keys(stat).length === 0){
             if(values.selection === 'user'){
-                axios.post('http://192.168.1.8:5000/user/signup', {
+                axios.post(url + '/user/signup', {
                     username: values.username,
                     password: values.password
                 }).then((response) => {
@@ -33,7 +34,7 @@ function Signup() {
                     console.log('There was an error!', error.response.status, error.response.data);
                 });
             } else {
-                axios.post('http://192.168.1.8:5000/storage/signup', {
+                axios.post(url + '/storage/signup', {
                     username: values.username,
                     password: values.password,
                     wallet_address: values.walletAddress,
