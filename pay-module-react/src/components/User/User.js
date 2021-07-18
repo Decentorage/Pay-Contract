@@ -139,6 +139,9 @@ function User() {
             setContracts(itemRows);
         }).catch(error => {
             console.log('There was an error!', error);
+            values.active = false;
+            setvalues(values);
+            setContracts([]);
         });
     }
 
@@ -155,13 +158,16 @@ function User() {
             setvalues(values);
             const row = (
             <tr key={contract.id}>
-                <td key={1}>{contract.filename}</td>
-                <td key={2}><Button onClick={() => payForContract(contract.contract_addresss, contract.price)}>pay for this file contract</Button></td>
+                <td key={5}>{contract.filename}</td>
+                <td key={6}><Button onClick={() => payForContract(contract.contract_addresss, contract.price)}>pay for this file contract</Button></td>
             </tr>
             );
             setPendding(row);
         }).catch(error => {
             console.log('There was an error!', error);
+            values.pending = false;
+            setvalues(values);
+            setPendding([]);
         });
     }
 
