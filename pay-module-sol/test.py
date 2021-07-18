@@ -15,7 +15,7 @@ pay_contract_to_deploy = w3.eth.contract(abi=abi, bytecode=bytecode)
 nonce = w3.eth.getTransactionCount(w3.eth.defaultAccount)
 transaction = pay_contract_to_deploy.constructor(499).buildTransaction({
     'gas': 10000000,
-    'gasPrice': w3.toWei('10', 'gwei'),
+    'gasPrice': w3.toWei('5', 'gwei'),
     'from': w3.eth.defaultAccount,
     'nonce': nonce
 })

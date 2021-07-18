@@ -34,7 +34,7 @@ function Signin() {
                     localStorage.setItem('accessToken', response.data['token']);
                     
                 }).catch(error => {
-                    console.log('There was an error!', error.response.status, error.response.data);
+                    console.log('There was an error!', error);
                     errors.signin = error.response.data;
                     seterrors(errors);
                 });

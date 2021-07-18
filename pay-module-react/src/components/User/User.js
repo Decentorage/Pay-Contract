@@ -20,7 +20,9 @@ function User() {
     const [values, setvalues] = useState({
         loggedout:false,
         pending:false,
-        active:false
+        active:false,
+        creatingContractHash:null,
+        payingContractHash:null
     });
 
     const logOut = (event) => {
@@ -41,7 +43,19 @@ function User() {
         await contract.methods.userPay().send({
         from: accounts[0],
         value: payLimit
+        }, function(err, hash){
+            if(!err){
+                console.log("money is sent needs to be mined");
+                values.payingContractHash = hash;
+                setvalues(values);
+            }
         });
+        await web3.eth.getTransactionReceipt(values.payingContractHash,function(err) {
+            if(!err) {
+                console.log("transaction receipt received");
+            }
+        });
+        
         axios.get(url + '/user/payContract',{
             headers: {
               'token': `${localStorage.getItem('accessToken')}`
@@ -64,7 +78,35 @@ function User() {
             decentorageAddress = response.data["decentorage_wallet_address"]
             const accounts = await web3.eth.getAccounts();
             // TODO: get the gas price and calculate the value of the contract deployment
-            web3.eth.sendTransaction({to: decentorageAddress, from: accounts[0], value: 36000000});
+            await web3.eth.sendTransaction(
+                {to: decentorageAddress,
+                from: accounts[0],
+                value: 6000000},
+                function(err, Hash){
+                    if (!err) {
+                        console.log(Hash + " success");
+                        values.creatingContractHash = Hash
+                        setvalues(values)
+                    }
+                      
+                  });
+            const receipt = await web3.eth.getTransactionReceipt(values.creatingContractHash,function(err) {
+                if(!err) {
+                    console.log("transaction receipt received");
+                }
+            });
+            console.log(receipt.gasUsed);
+            axios.post(url + '/user/verifyTransaction',{
+                transactionHash: values.creatingContractHash
+                },{
+                headers: {
+                    'token': `${localStorage.getItem('accessToken')}`
+                }
+            }).then((response) => {
+                console.log(response.status, response.data);
+            }).catch(error => {
+                console.log('There was an error!', error);
+            })
         }).catch(error => {
             console.log('There was an error!', error);
         });
@@ -107,21 +149,17 @@ function User() {
             }
           }).then((response) => {
             console.log(response.status, response.data);
-            const contracts = response.data;
+            const contract = response.data;
             // setPendding(contracts);
             values.pending = true;
             setvalues(values);
-            const itemRows = [];
-            for (let contract of contracts) {
-              const row = (
-                <tr key={contract.id}>
-                    <td key={1}>{contract.filename}</td>
-                    <td key={2}><Button onClick={() => payForContract(contract.contract_addresss, contract.price)}>pay for this file contract</Button></td>
-                </tr>
-              );
-              itemRows.push(row);
-            }
-            setPendding(itemRows);
+            const row = (
+            <tr key={contract.id}>
+                <td key={1}>{contract.filename}</td>
+                <td key={2}><Button onClick={() => payForContract(contract.contract_addresss, contract.price)}>pay for this file contract</Button></td>
+            </tr>
+            );
+            setPendding(row);
         }).catch(error => {
             console.log('There was an error!', error);
         });
