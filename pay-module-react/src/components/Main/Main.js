@@ -9,17 +9,13 @@ import { BrowserRouter as Router,  Switch, Route, Redirect } from "react-router-
 
 function Main() {
     return (
-        <>
         <Router>
-            <Redirect to="signin"></Redirect>
             <Switch>
-                <Route path="/signin" component={Signin}/>
+                <Route path="/" exact component={Signin}/>
                 <Route path="/signup" component={Signup}/>
-                <Route path="/app" component={App}/>
                 <Route path="/user" component={User}/>
             </Switch>
         </Router>
-        </>
     );
 }
 

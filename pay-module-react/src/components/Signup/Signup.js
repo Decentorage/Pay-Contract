@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import { Card, Navbar, Container, Row, Col } from 'react-bootstrap';
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Validation from './ValidationSignup';
 import logo from '../../decentorage.png';
 import axios from 'axios';
@@ -8,6 +8,8 @@ import url from '../../url';
 import './Signup.css'
 
 function Signup() {
+    const history = useHistory();
+
     const [values, setvalues] = useState({
         username:"",
         password:"",
@@ -19,6 +21,35 @@ function Signup() {
 
     const [errors, seterrors] = useState({});
 
+    const signin = (event) => {
+        event.preventDefault();
+        if(values.selection === 'user'){
+            axios.post(url + '/user/signin', {
+                username: values.username,
+                password: values.password
+            }).then((response) => {
+                localStorage.setItem('accessToken', response.data['token']);
+                localStorage.setItem('username', values.username);
+                history.push('/user');
+            }).catch(error => {
+                errors.signin = error.response.data;
+                seterrors(errors);
+            });
+        } else {
+            axios.post(url + '/storage/signin', {
+                username: values.username,
+                password: values.password
+            }).then((response) => {
+                localStorage.setItem('accessToken', response.data['token']);
+            }).catch(error => {
+                if(error.response.data) {
+                    errors.signin = error.response.data;
+                    seterrors(errors);
+                }
+            });
+        }
+    };
+
     const submitForm = (event) => {
         event.preventDefault();
         let stat = Validation(values);
@@ -29,9 +60,8 @@ function Signup() {
                     username: values.username,
                     password: values.password
                 }).then((response) => {
-                    console.log(response.status, response.data);
+                    signin(event);
                 }).catch(error => {
-                    console.log('There was an error!', error.response.status, error.response.data);
                 });
             } else {
                 axios.post(url + '/storage/signup', {
@@ -40,9 +70,7 @@ function Signup() {
                     wallet_address: values.walletAddress,
                     available_space: values.availableSpace
                 }).then((response) => {
-                    console.log(response.status, response.data);
                 }).catch(error => {
-                    console.log('There was an error!', error.response.status, error.response.data);
                 });
             }
         }
@@ -148,7 +176,7 @@ function Signup() {
                 </div>
                 <input type="submit" value="sign up" className="btn btn-primary btn-lg buttons-style" />
                 <p>if you have an account</p>
-                <Link to="/signin" className="btn btn-primary btn-lg buttons-style">sign in</Link>
+                <Link to="/" className="btn btn-primary btn-lg buttons-style">sign in</Link>
             </form>
         </Card>
         </>
