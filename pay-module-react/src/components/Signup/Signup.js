@@ -1,14 +1,21 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import { Card, Navbar, Container, Row, Col } from 'react-bootstrap';
 import { Link, useHistory } from "react-router-dom";
 import Validation from './ValidationSignup';
 import logo from '../../decentorage.png';
 import axios from 'axios';
 import url from '../../url';
-import './Signup.css'
+import './Signup.css';
+import web3 from '../contract/web3';
 
 function Signup() {
     const history = useHistory();
+
+    useEffect(() => {
+        if(typeof web3 === 'string'){
+            history.push("/noprovider");
+        }
+    }, []);
 
     const [values, setvalues] = useState({
         username:"",

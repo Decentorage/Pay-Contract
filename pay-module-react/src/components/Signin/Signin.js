@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import Validation from './ValidationSignin';
 import { Card, Navbar, Container, Row, Col } from 'react-bootstrap';
 import { Link, Redirect, useHistory } from 'react-router-dom';
@@ -6,6 +6,7 @@ import logo from '../../decentorage.png';
 import axios from 'axios';
 import url from '../../url';
 import './Signin.css'
+import web3 from '../contract/web3';
 
 function Signin() {
     const history = useHistory();
@@ -18,6 +19,12 @@ function Signin() {
     });
 
     const [errors, seterrors] = useState({});
+
+    useEffect(() => {
+        if(typeof web3 === 'string'){
+            history.push("/noprovider");
+        }
+    }, []);
 
     const submitForm = (event) => {
         event.preventDefault();
