@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import { Card, Navbar, Container, Row, Col } from 'react-bootstrap';
+import { Navbar, Container, Row, Col } from 'react-bootstrap';
 import { Link, useHistory } from "react-router-dom";
 import Validation from './ValidationSignup';
 import logo from '../../decentorage_icon.png';
@@ -48,11 +48,10 @@ function Signup() {
                 password: values.password
             }).then((response) => {
                 localStorage.setItem('accessToken', response.data['token']);
+                localStorage.setItem('username', values.username);
+                history.push('/storage');
             }).catch(error => {
-                if(error.response.data) {
-                    errors.signin = error.response.data;
-                    seterrors(errors);
-                }
+                alert("incorrect username or password");
             });
         }
     };
@@ -67,8 +66,10 @@ function Signup() {
                     username: values.username,
                     password: values.password
                 }).then((response) => {
+                    alert("you have signed up successfully, press ok to sign in");
                     signin(event);
                 }).catch(error => {
+                    alert("a problem accured while signing up")
                 });
             } else {
                 axios.post(url + '/storage/signup', {
@@ -77,7 +78,10 @@ function Signup() {
                     wallet_address: values.walletAddress,
                     available_space: values.availableSpace
                 }).then((response) => {
+                    alert("you have signed up successfully, press ok to sign in");
+                    signin(event);
                 }).catch(error => {
+                    alert("a problem accured while signing up")
                 });
             }
         }
@@ -100,93 +104,92 @@ function Signup() {
                 </Row>
             </Container>
         </Navbar>
-        <Card style={{ width: '25rem' }} className="signup-card">
-            <form onSubmit={submitForm}>
-                <div>
-                    <label>Username</label>
+        <div className="signup-container">
+            <section className="signup" id="signup">
+                <header>
+                <h2>Decentorage</h2>
+                <h4>Signup</h4>
+                </header>
+                <form className="signup-form" onSubmit={submitForm}>
                     <input 
-                    type="text" 
-                    name="username" 
-                    value={values.username}
-                    onChange={changeHandler}
-                    className="input-style"
+                        type="text" 
+                        name="username" 
+                        value={values.username}
+                        onChange={changeHandler}
+                        className="signup-input"
+                        placeholder="User"
+                        autoFocus
                     />
                     {errors.username && <p>{errors.username}</p>}
-                </div>
-                <div>
-                    <label>password</label>
                     <input 
-                    type="password" 
-                    name="password"
-                    value={values.password}
-                    onChange={changeHandler}
-                    className="input-style"
+                        type="password" 
+                        name="password"
+                        value={values.password}
+                        onChange={changeHandler}
+                        className="signup-input"
+                        placeholder="Password"
                     />
                     {errors.password && <p>{errors.password}</p>}
-                </div>
-                <div>
-                    <label>confirm password</label>
                     <input 
-                    type="password" 
-                    name="confirm"
-                    value={values.confirm}
-                    onChange={changeHandler}
-                    className="input-style"
+                        type="password" 
+                        name="confirm"
+                        value={values.confirm}
+                        onChange={changeHandler}
+                        className="signup-input"
+                        placeholder="confirm password"
                     />
                     {errors.confirm && <p>{errors.confirm}</p>}
-                </div>
-                <div>
-                    <label>wallet address</label>
                     <input 
-                    type="text" 
-                    name="walletAddress"
-                    value={values.walletAddress}
-                    onChange={changeHandler}
-                    disabled={values.selection === "user"}
-                    className="input-style"
+                        type="text" 
+                        name="walletAddress"
+                        value={values.walletAddress}
+                        onChange={changeHandler}
+                        hidden={values.selection === "user"}
+                        className="signup-input"
+                        placeholder="wallet address"
                     />
                     {errors.password && <p>{errors.walletAddress}</p>}
-                </div>
-                <div>
-                    <label>available space</label>
                     <input 
-                    type="number" 
-                    name="availableSpace"
-                    value={values.availableSpace}
-                    onChange={changeHandler}
-                    disabled={values.selection === "user"}
-                    className="input-style"
+                        type="number" 
+                        name="availableSpace"
+                        value={values.availableSpace}
+                        onChange={changeHandler}
+                        hidden={values.selection === "user"}
+                        className="signup-input"
+                        placeholder="available space (in GB)"
                     />
-                    {errors.password && <p>{errors.availableSpace}</p>}
-                </div>
-                {values.selection === "user" && <p>do not need to fill wallet address and available as user sign up</p>}
-                <div>
-                    <label>
-                        <input
-                        type="radio"
-                        name="selection"
-                        value="user"
-                        checked={values.selection === "user"}
-                        onChange={changeHandler}
-                        />
-                        User
-                    </label>
-                    <label>
-                        <input
-                        type="radio"
-                        name="selection"
-                        value="storage"
-                        checked={values.selection === "storage"}
-                        onChange={changeHandler}
-                        />
-                        Storage
-                    </label>
-                </div>
-                <input type="submit" value="sign up" className="btn btn-primary btn-lg buttons-style" />
-                <p>if you have an account</p>
-                <Link to="/" className="btn btn-primary btn-lg buttons-style">sign in</Link>
-            </form>
-        </Card>
+                    {errors.availableSpace && <p>{errors.availableSpace}</p>}
+                    <Row>
+                        <Col xs={6} style={{textAlign: "center"}}>
+                            <input
+                                type="radio"
+                                name="selection"
+                                value="user"
+                                checked={values.selection === "user"}
+                                onChange={changeHandler}
+                            />
+                            User
+                        </Col>
+                        <Col xs={6} style={{textAlign: "center"}}>
+                            <input
+                                type="radio"
+                                name="selection"
+                                value="storage"
+                                checked={values.selection === "storage"}
+                                onChange={changeHandler}
+                            />
+                            Storage
+                        </Col>
+                    </Row>
+                    <div className="submit-container">
+                        <button type="submit" className="signup-button" style={{margin: "0 auto"}}>SIGN UP</button>
+                    </div>
+                    <div className="submit-container">
+                        <Link to="/" className="btn signup-button" style={{margin: "0 auto"}}>IF YOU ALREADY HAVE AN ACCOUNT SIGN IN</Link>
+                    </div>
+                </form>
+            </section>
+        </div>
         </>
     );
 }

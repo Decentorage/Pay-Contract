@@ -5,8 +5,8 @@ import { Link, useHistory } from 'react-router-dom';
 import logo from '../../decentorage_icon.png';
 import axios from 'axios';
 import url from '../../url';
-import './Signin.css'
 import web3 from '../contract/web3';
+import './Signin.css';
 
 function Signin() {
     const history = useHistory();
@@ -40,10 +40,7 @@ function Signin() {
                     localStorage.setItem('username', values.username);
                     history.push('/user');
                 }).catch(error => {
-                    if(error.response.data){
-                        errors.signin = error.response.data;
-                        seterrors(errors);
-                    }
+                    alert("incorrect username or password");
                 });
             } else {
                 axios.post(url + '/storage/signin', {
@@ -51,11 +48,10 @@ function Signin() {
                     password: values.password
                 }).then((response) => {
                     localStorage.setItem('accessToken', response.data['token']);
+                    localStorage.setItem('username', values.username);
+                    history.push('/storage');
                 }).catch(error => {
-                    if(error.response.data){
-                        errors.signin = error.response.data;
-                        seterrors(errors);
-                    }
+                    alert("incorrect username or password");
                 });
             }
         }
@@ -81,7 +77,7 @@ function Signin() {
         <div className="login-container">
             <section className="login" id="login">
                 <header>
-                <h2>Application Name</h2>
+                <h2>Decentorage</h2>
                 <h4>Login</h4>
                 </header>
                 <form className="login-form" onSubmit={submitForm}>
@@ -92,9 +88,9 @@ function Signin() {
                         onChange={changeHandler}
                         className="login-input"
                         placeholder="User"
-                        required
                         autoFocus
                     />
+                    {errors.username && <p>{errors.username}</p>}
                     <input 
                         type="password" 
                         name="password"
@@ -102,10 +98,32 @@ function Signin() {
                         onChange={changeHandler}
                         className="login-input"
                         placeholder="Password"
-                        required
                     />
+                    {errors.password && <p>{errors.password}</p>}
+                    <Row>
+                        <Col xs={6} style={{textAlign: "center"}}>
+                            <input
+                                type="radio"
+                                name="selection"
+                                value="user"
+                                checked={values.selection === "user"}
+                                onChange={changeHandler}
+                            />
+                            User
+                        </Col>
+                        <Col xs={6} style={{textAlign: "center"}}>
+                            <input
+                                type="radio"
+                                name="selection"
+                                value="storage"
+                                checked={values.selection === "storage"}
+                                onChange={changeHandler}
+                            />
+                            Storage
+                        </Col>
+                    </Row>
                     <div className="submit-container">
-                        <button type="submit" className="login-button">SIGN IN</button>
+                        <button type="submit" className="login-button" style={{margin: "0 auto"}}>SIGN IN</button>
                     </div>
                     <div className="submit-container">
                         <Link to="/signup" className="btn login-button" style={{margin: "0 auto"}}>IF YOU DO NOT HAVE AN ACCOUNT SIGN UP</Link>
