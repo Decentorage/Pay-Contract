@@ -1,9 +1,20 @@
+body{
+    background-color: #fff;
+}
+
 .Navbar {
-    background-color: orange;
+    background-color: #000;
 }
 
 .logo{
     width: inherit;
+}
+
+.logoName{
+    color:#F46727;
+    margin-top: 29px;
+    width: 100%;
+    text-align: center;
 }
 
 .container div{

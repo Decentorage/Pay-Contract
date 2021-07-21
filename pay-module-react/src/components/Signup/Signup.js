@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import { Card, Navbar, Container, Row, Col } from 'react-bootstrap';
 import { Link, useHistory } from "react-router-dom";
 import Validation from './ValidationSignup';
-import logo from '../../decentorage.png';
+import logo from '../../decentorage_icon.png';
 import axios from 'axios';
 import url from '../../url';
 import './Signup.css';
@@ -95,7 +95,8 @@ function Signup() {
         <Navbar className = "Navbar">
             <Container fluid>
                 <Row>
-                    <Col sm={3}><img src={logo} alt="Logo" className='logo'/></Col>
+                    <Col xl={1} lg={2} md={2} sm={3} ><img src={logo} alt="Logo" className='logo'/></Col>
+                    <Col sm={2}><h1 className="logoName">Decentorage</h1></Col>
                 </Row>
             </Container>
         </Navbar>

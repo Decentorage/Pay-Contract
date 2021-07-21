@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react';
 import Validation from './ValidationSignin';
-import { Card, Navbar, Container, Row, Col } from 'react-bootstrap';
-import { Link, Redirect, useHistory } from 'react-router-dom';
-import logo from '../../decentorage.png';
+import { Navbar, Container, Row, Col } from 'react-bootstrap';
+import { Link, useHistory } from 'react-router-dom';
+import logo from '../../decentorage_icon.png';
 import axios from 'axios';
 import url from '../../url';
 import './Signin.css'
@@ -73,62 +73,46 @@ function Signin() {
         <Navbar className = "Navbar">
             <Container fluid>
                 <Row>
-                    <Col sm={3}><img src={logo} alt="Logo" className='logo'/></Col>
+                    <Col xl={1} lg={2} md={2} sm={3} ><img src={logo} alt="Logo" className='logo'/></Col>
+                    <Col sm={2}><h1 className="logoName">Decentorage</h1></Col>
                 </Row>
             </Container>
         </Navbar>
-        <Card style={{ width: '25rem' }} className="signin-card">
-            <form onSubmit={submitForm}>
-                <div>
-                    <label>Username</label>
+        <div className="login-container">
+            <section className="login" id="login">
+                <header>
+                <h2>Application Name</h2>
+                <h4>Login</h4>
+                </header>
+                <form className="login-form" onSubmit={submitForm}>
                     <input 
-                    type="text" 
-                    name="username" 
-                    value={values.username}
-                    onChange={changeHandler}
-                    className="input-style"
+                        type="text" 
+                        name="username" 
+                        value={values.username}
+                        onChange={changeHandler}
+                        className="login-input"
+                        placeholder="User"
+                        required
+                        autoFocus
                     />
-                    {errors.username && <p>{errors.username}</p>}
-                </div>
-                <div>
-                    <label>password</label>
                     <input 
-                    type="password" 
-                    name="password"
-                    value={values.password}
-                    onChange={changeHandler}
-                    className="input-style"
+                        type="password" 
+                        name="password"
+                        value={values.password}
+                        onChange={changeHandler}
+                        className="login-input"
+                        placeholder="Password"
+                        required
                     />
-                    {errors.password && <p>{errors.password}</p>}
-                </div>
-                <div>
-                    <label>
-                        <input
-                        type="radio"
-                        name="selection"
-                        value="user"
-                        checked={values.selection === "user"}
-                        onChange={changeHandler}
-                        />
-                        User
-                    </label>
-                    <label>
-                        <input
-                        type="radio"
-                        name="selection"
-                        value="storage"
-                        checked={values.selection === "storage"}
-                        onChange={changeHandler}
-                        />
-                        Storage
-                    </label>
-                </div>
-                {errors.signin && <p>{errors.signin}</p>}
-                <input type="submit" value="sign in" className="btn btn-primary btn-lg buttons-style" />
-                <p>if you don't have an account sign up</p>
-                <Link to="/signup" className="btn btn-primary btn-lg buttons-style">sign up</Link>
-            </form>
-        </Card>
+                    <div className="submit-container">
+                        <button type="submit" className="login-button">SIGN IN</button>
+                    </div>
+                    <div className="submit-container">
+                        <Link to="/signup" className="btn login-button" style={{margin: "0 auto"}}>IF YOU DO NOT HAVE AN ACCOUNT SIGN UP</Link>
+                    </div>
+                </form>
+            </section>
+        </div>
         </>
     );
 }

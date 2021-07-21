@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 import { Navbar, Container, Row, Col, Button, Table } from 'react-bootstrap'
-import logo from '../../decentorage.png';
+import logo from '../../decentorage_icon.png';
 import axios from 'axios';
 import web3 from '../contract/web3';
 import abi from '../../abi';

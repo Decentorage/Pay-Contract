@@ -2,10 +2,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Main.css'
 import Signin from '../Signin/Signin';
 import Signup from '../Signup/Signup';
-import App from '../contract/App';
 import User from '../User/User';
 import NoProvider from '../NoProvider/Noprovider';
-import { BrowserRouter as Router,  Switch, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router,  Switch, Route } from "react-router-dom";
 
 
 function Main() {
