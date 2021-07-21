@@ -1,13 +1,15 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import Validation from './ValidationSignin';
-import { Card, Navbar, Container, Row, Col } from 'react-bootstrap';
-import { Link, Redirect } from 'react-router-dom';
-import logo from '../../decentorage.png';
+import { Navbar, Container, Row, Col } from 'react-bootstrap';
+import { Link, useHistory } from 'react-router-dom';
+import logo from '../../decentorage_icon.png';
 import axios from 'axios';
 import url from '../../url';
-import './Signin.css'
+import web3 from '../contract/web3';
+import './Signin.css';
 
 function Signin() {
+    const history = useHistory();
 
     const [values, setvalues] = useState({
         username:"",
@@ -18,37 +20,38 @@ function Signin() {
 
     const [errors, seterrors] = useState({});
 
+    useEffect(() => {
+        if(typeof web3 === 'string'){
+            history.push("/noprovider");
+        }
+    }, []);
+
     const submitForm = (event) => {
         event.preventDefault();
         let stat = Validation(values);
         seterrors(stat);
         if(Object.keys(stat).length === 0){
             if(values.selection === 'user'){
-                values.loggedin = true;
-                setvalues(values);
                 axios.post(url + '/user/signin', {
                     username: values.username,
                     password: values.password
                 }).then((response) => {
-                    console.log(response.status, response.data['token']);
                     localStorage.setItem('accessToken', response.data['token']);
-                    
+                    localStorage.setItem('username', values.username);
+                    history.push('/user');
                 }).catch(error => {
-                    console.log('There was an error!', error);
-                    errors.signin = error.response.data;
-                    seterrors(errors);
+                    alert("incorrect username or password");
                 });
             } else {
                 axios.post(url + '/storage/signin', {
                     username: values.username,
                     password: values.password
                 }).then((response) => {
-                    console.log(response.status, response.data);
                     localStorage.setItem('accessToken', response.data['token']);
+                    localStorage.setItem('username', values.username);
+                    history.push('/storage');
                 }).catch(error => {
-                    console.log('There was an error!', error.response.status, error.response.data);
-                    errors.signin = error.response.data;
-                    seterrors(errors);
+                    alert("incorrect username or password");
                 });
             }
         }
@@ -66,63 +69,68 @@ function Signin() {
         <Navbar className = "Navbar">
             <Container fluid>
                 <Row>
-                    <Col sm={3}><img src={logo} alt="Logo" className='logo'/></Col>
+                    <Col xl={1} lg={2} md={2} sm={3} ><img src={logo} alt="Logo" className='logo'/></Col>
+                    <Col sm={2}><h1 className="logoName">Decentorage</h1></Col>
                 </Row>
             </Container>
         </Navbar>
-        <Card style={{ width: '25rem' }} className="signin-card">
-            <form onSubmit={submitForm}>
-                <div>
-                    <label>Username</label>
+        <div className="login-container">
+            <section className="login" id="login">
+                <header>
+                <h2>Decentorage</h2>
+                <h4>Login</h4>
+                </header>
+                <form className="login-form" onSubmit={submitForm}>
                     <input 
-                    type="text" 
-                    name="username" 
-                    value={values.username}
-                    onChange={changeHandler}
-                    className="input-style"
+                        type="text" 
+                        name="username" 
+                        value={values.username}
+                        onChange={changeHandler}
+                        className="login-input"
+                        placeholder="User"
+                        autoFocus
                     />
                     {errors.username && <p>{errors.username}</p>}
-                </div>
-                <div>
-                    <label>password</label>
                     <input 
-                    type="password" 
-                    name="password"
-                    value={values.password}
-                    onChange={changeHandler}
-                    className="input-style"
+                        type="password" 
+                        name="password"
+                        value={values.password}
+                        onChange={changeHandler}
+                        className="login-input"
+                        placeholder="Password"
                     />
                     {errors.password && <p>{errors.password}</p>}
-                </div>
-                <div>
-                    <label>
-                        <input
-                        type="radio"
-                        name="selection"
-                        value="user"
-                        checked={values.selection === "user"}
-                        onChange={changeHandler}
-                        />
-                        User
-                    </label>
-                    <label>
-                        <input
-                        type="radio"
-                        name="selection"
-                        value="storage"
-                        checked={values.selection === "storage"}
-                        onChange={changeHandler}
-                        />
-                        Storage
-                    </label>
-                </div>
-                {errors.signin && <p>{errors.signin}</p>}
-                <input type="submit" value="sign in" className="btn btn-primary btn-lg buttons-style" />
-                <p>if you don't have an account sign up</p>
-                <Link to="/signup" className="btn btn-primary btn-lg buttons-style">sign up</Link>
-                {values.loggedin && <Redirect to='/user'/>}
-            </form>
-        </Card>
+                    <Row>
+                        <Col xs={6} style={{textAlign: "center"}}>
+                            <input
+                                type="radio"
+                                name="selection"
+                                value="user"
+                                checked={values.selection === "user"}
+                                onChange={changeHandler}
+                            />
+                            User
+                        </Col>
+                        <Col xs={6} style={{textAlign: "center"}}>
+                            <input
+                                type="radio"
+                                name="selection"
+                                value="storage"
+                                checked={values.selection === "storage"}
+                                onChange={changeHandler}
+                            />
+                            Storage
+                        </Col>
+                    </Row>
+                    <div className="submit-container">
+                        <button type="submit" className="login-button" style={{margin: "0 auto"}}>SIGN IN</button>
+                    </div>
+                    <div className="submit-container">
+                        <Link to="/signup" className="btn login-button" style={{margin: "0 auto"}}>IF YOU DO NOT HAVE AN ACCOUNT SIGN UP</Link>
+                    </div>
+                </form>
+            </section>
+        </div>
         </>
     );
 }
