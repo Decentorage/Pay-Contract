@@ -27,6 +27,12 @@ function User() {
         payingContractHash:null
     });
 
+    function calc(size) {
+        size = size/1024/1024;
+        var with2Decimals = size.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]
+        return with2Decimals;
+    }
+
     const logOut = (event) => {
         event.preventDefault();
         localStorage.removeItem('accessToken');
@@ -45,9 +51,10 @@ function User() {
     const payForContract = async () => {
         let contract = new web3.eth.Contract(abi, localStorage.getItem('contractAddress'));
         const accounts = await web3.eth.getAccounts();
+        const paylimit = parseInt(localStorage.getItem('price')) + 100000000000000000
         await contract.methods.userPay().send({
             from: accounts[0],
-            value: 1000000000000000000}, 
+            value: paylimit}, 
             function(err, hash){
                 if(!err){
                     values.payingContractHash = hash;
@@ -60,6 +67,7 @@ function User() {
               'token': `${localStorage.getItem('accessToken')}`
             }
           }).then((response)=>{
+              setPendding([]);
           }).catch((error)=>{
               alert("a problem accured with payContract request");
           });   
@@ -119,7 +127,7 @@ function User() {
                         {contract.filename}
                     </div>
                     <div className="cell" data-title="size (in KB)">
-                        {contract.size}
+                        {calc(contract.size)}
                     </div>
                     <div className="cell" data-title="download count">
                         {contract.download_count}
@@ -148,6 +156,7 @@ function User() {
             const contract = response.data;
             localStorage.setItem('contractAddress', response.data["contract_address"])
             localStorage.setItem('price', response.data["price"])
+            console.log(response.data["price"])
             const row = (
             <div className="row2">
                 <div className="cell" data-title="filename">
@@ -211,7 +220,7 @@ function User() {
                         filename
                     </div>
                     <div className="cell">
-                        size (in KB)
+                        size (in MB)
                     </div>
                     <div className="cell">
                         download count
