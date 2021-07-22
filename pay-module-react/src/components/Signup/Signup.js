@@ -76,7 +76,7 @@ function Signup() {
                     username: values.username,
                     password: values.password,
                     wallet_address: values.walletAddress,
-                    available_space: values.availableSpace
+                    available_space: parseInt(values.availableSpace)*1024*1024*1024
                 }).then((response) => {
                     alert("you have signed up successfully, press ok to sign in");
                     signin(event);
