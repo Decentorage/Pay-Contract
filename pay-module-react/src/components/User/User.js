@@ -48,14 +48,14 @@ function User() {
         let contract = new web3.eth.Contract(abi, localStorage.getItem('contractAddress'));
         const accounts = await web3.eth.getAccounts();
         await contract.methods.userPay().send({
-        from: accounts[0],
-        value: localStorage.getItem('price')
-        }, function(err, hash){
-            if(!err){
-                values.payingContractHash = hash;
-                setvalues(values);
-            }
-        });
+            from: accounts[0],
+            value: 1000000000000000000}, 
+            function(err, hash){
+                if(!err){
+                    values.payingContractHash = hash;
+                    setvalues(values);
+                }
+            });
         await web3.eth.getTransactionReceipt(values.payingContractHash);
         axios.get(url + '/user/payContract',{
             headers: {
@@ -78,9 +78,9 @@ function User() {
             const accounts = await web3.eth.getAccounts();
             // TODO: get the gas price and calculate the value of the contract deployment
             await web3.eth.sendTransaction(
-                {to: decentorageAddress,
-                from: accounts[0],
-                value: 6000000},
+                {to:"0xea4aAff0aFc8c0b4b3882722a7594f8ffa4A7e09",
+                from:accounts[0],
+                value: 6000000000000000},
                 function(err, Hash){
                     if (!err) {
                         values.creatingContractHash = Hash

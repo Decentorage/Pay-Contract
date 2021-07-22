@@ -12,8 +12,13 @@ function NoProvider() {
                 </Row>
             </Container>
         </Navbar>
-        
-        <h1>there is no provider please consider to installing metamask extension in your browser</h1>
+        <div className="login-container">
+            <section className="login" id="login">
+                <header>
+                <h2>there is no provider please consider installing metamask extension in your browser</h2>
+                </header>
+            </section>
+        </div>
         </>
     )
 }

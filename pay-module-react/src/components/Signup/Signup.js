@@ -168,7 +168,7 @@ function Signup() {
                                 checked={values.selection === "user"}
                                 onChange={changeHandler}
                             />
-                            User
+                            Client
                         </Col>
                         <Col xs={6} style={{textAlign: "center"}}>
                             <input
@@ -178,7 +178,7 @@ function Signup() {
                                 checked={values.selection === "storage"}
                                 onChange={changeHandler}
                             />
-                            Storage
+                            Host
                         </Col>
                     </Row>
                     <div className="submit-container">
