@@ -18,7 +18,6 @@ function User() {
         }
         getContracts();
         getPenddingContracts();
-        alert("you have signed in");
     }, []);
 
     const [contracts, setContracts] = useState([]);
@@ -44,7 +43,6 @@ function User() {
     // did not got tested for two reasons first no data 
     // second the api call does a lot of things we do not need for now
     const payForContract = async () => {
-        console.log(localStorage.getItem("contractAddress"));
         let contract = new web3.eth.Contract(abi, localStorage.getItem('contractAddress'));
         const accounts = await web3.eth.getAccounts();
         await contract.methods.userPay().send({
@@ -78,7 +76,7 @@ function User() {
             const accounts = await web3.eth.getAccounts();
             // TODO: get the gas price and calculate the value of the contract deployment
             await web3.eth.sendTransaction(
-                {to:"0xea4aAff0aFc8c0b4b3882722a7594f8ffa4A7e09",
+                {to:decentorageAddress,
                 from:accounts[0],
                 value: 6000000000000000},
                 function(err, Hash){
@@ -100,7 +98,7 @@ function User() {
                 alert("could not verify the transaction");
             });
         }).catch((error)=>{
-            alert("could not get the wallet address of the decentorage node");
+            alert("a problem happened while dealing with the transaction");
         })
     }
 
