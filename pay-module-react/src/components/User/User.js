@@ -74,6 +74,8 @@ function User() {
     }
 
     const payforCreatingContract = () => {
+        console.log("sss")
+
         var decentorageAddress;
         axios.get(url + '/user/getDecentorageWalletAddress',{
             headers: {
@@ -81,6 +83,7 @@ function User() {
             }
           }).then(async (response) => {
             decentorageAddress = response.data["decentorage_wallet_address"]
+            await window.ethereum.enable();
             const accounts = await web3.eth.getAccounts();
             // TODO: get the gas price and calculate the value of the contract deployment
             await web3.eth.sendTransaction(
@@ -106,6 +109,7 @@ function User() {
                 alert("could not verify the transaction");
             });
         }).catch((error)=>{
+            alert("sss")
             alert("a problem happened while dealing with the transaction");
         })
     }
