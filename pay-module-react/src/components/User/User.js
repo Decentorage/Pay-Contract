@@ -50,6 +50,7 @@ function User() {
     // second the api call does a lot of things we do not need for now
     const payForContract = async () => {
         let contract = new web3.eth.Contract(abi, localStorage.getItem('contractAddress'));
+        await window.ethereum.enable();
         const accounts = await web3.eth.getAccounts();
         const paylimit = parseInt(localStorage.getItem('price')) + 100000000000000000
         await contract.methods.userPay().send({
@@ -74,7 +75,6 @@ function User() {
     }
 
     const payforCreatingContract = () => {
-        console.log("sss")
 
         var decentorageAddress;
         axios.get(url + '/user/getDecentorageWalletAddress',{
@@ -109,7 +109,6 @@ function User() {
                 alert("could not verify the transaction");
             });
         }).catch((error)=>{
-            alert("sss")
             alert("a problem happened while dealing with the transaction");
         })
     }
@@ -122,7 +121,6 @@ function User() {
           }).then((response) => {
             const contracts = response.data;
             // setContracts(contracts);
-            console.log(contracts);
             const itemRows = [];
             for (let contract of contracts) {
               const row = (
@@ -156,11 +154,9 @@ function User() {
               'token': `${localStorage.getItem('accessToken')}`
             }
           }).then((response) => {
-            console.log(response.data);
             const contract = response.data;
             localStorage.setItem('contractAddress', response.data["contract_address"])
             localStorage.setItem('price', response.data["price"])
-            console.log(response.data["price"])
             const row = (
             <div className="row2">
                 <div className="cell" data-title="filename">
