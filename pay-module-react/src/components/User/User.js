@@ -75,7 +75,6 @@ function User() {
     }
 
     const payforCreatingContract = () => {
-
         var decentorageAddress;
         axios.get(url + '/user/getDecentorageWalletAddress',{
             headers: {
@@ -195,7 +194,7 @@ function User() {
             </Col>
             <Col sm={6}>
                 <div className="pay-for-contract-button-container">
-                    <Button size="lg" className="user-button" onClick={payforCreatingContract}>pay for contract</Button>
+                    <Button size="lg" className="user-button" onClick={payforCreatingContract}>buy seeds</Button>
                 </div>
             </Col>
         </Row>
