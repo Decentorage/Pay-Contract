@@ -52,7 +52,7 @@ function User() {
         let contract = new web3.eth.Contract(abi, localStorage.getItem('contractAddress'));
         await window.ethereum.enable();
         const accounts = await web3.eth.getAccounts();
-        const paylimit = parseInt(localStorage.getItem('price')) + 100000000000000000
+        const paylimit = parseInt(localStorage.getItem('price')) + 100000000000000
         await contract.methods.userPay().send({
             from: accounts[0],
             value: paylimit}, 
@@ -70,7 +70,7 @@ function User() {
           }).then((response)=>{
               setPendding([]);
           }).catch((error)=>{
-              alert("a problem accured with payContract request");
+              alert("a problem occured with payContract request");
           });   
     }
 
