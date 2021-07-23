@@ -194,7 +194,7 @@ function User() {
             </Col>
             <Col sm={6}>
                 <div className="pay-for-contract-button-container">
-                    <Button size="lg" className="user-button" onClick={payforCreatingContract}>buy seeds</Button>
+                    <Button size="lg" className="user-button" onClick={payforCreatingContract}>Buy seeds</Button>
                 </div>
             </Col>
         </Row>
