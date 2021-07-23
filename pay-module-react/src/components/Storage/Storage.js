@@ -36,7 +36,6 @@ function Storage() {
           }).then((response) => {
             const contracts = response.data;
             // setContracts(contracts);
-            console.log(contracts);
             const itemRows = [];
             for (let contract of contracts) {
               const row = (
@@ -73,7 +72,7 @@ function Storage() {
                     <Col sm={2}><h1 className="logoName">Decentorage</h1></Col>
                     <Col xl={8} lg={6} md={5} sm={4}></Col>
                     <Col xl={1} lg={2} sm={3} className='logout-col'>
-                        <Button size="lg" onClick={logOut} className="user-button">log out</Button>
+                        <Button size="lg" onClick={logOut} className="user-button">Log out</Button>
                     </Col>
                 </Row>
             </Container>
@@ -89,16 +88,16 @@ function Storage() {
             <div className="table">
                 <div className="row2 header Navy-blue">
                     <div className="cell">
-                        filename
+                        Filename
                     </div>
                     <div className="cell">
-                        size (in KB)
+                        Size (in KB)
                     </div>
                     <div className="cell">
-                        download count
+                        Download count
                     </div>
                     <div className="cell">
-                        duration in months
+                        Duration in months
                     </div>
                 </div>
                 

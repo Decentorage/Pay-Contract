@@ -24,7 +24,7 @@ contract web2decentorage {
     //backend (done) 
     function addStorageNode(address A) public restricted {
         storageNodes.push(A);
-    }
+    }   
 
     //backend (done) 
     function deleteStorageNode(address A) public restricted {
