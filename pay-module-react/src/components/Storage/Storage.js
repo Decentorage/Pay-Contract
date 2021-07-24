@@ -46,7 +46,7 @@ function Storage() {
                         <p>{contract.shard_id}</p>
                     </Col>
                     <Col sm={3} className="cell" data-title="size (in KB)">
-                        <p>{contract.payment_per_week}</p>
+                        <p>{contract.payment_per_interval}</p>
                     </Col>
                     <Col sm={3} className="cell" data-title="download count">
                         <p>{contract.payment_left}</p>

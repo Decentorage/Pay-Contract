@@ -52,7 +52,7 @@ function User() {
         let contract = new web3.eth.Contract(abi, localStorage.getItem('contractAddress'));
         await window.ethereum.enable();
         const accounts = await web3.eth.getAccounts();
-        const paylimit = parseInt(localStorage.getItem('price')) + 100000000000000
+        const paylimit = parseInt(localStorage.getItem('price')) * 1.3
         await contract.methods.userPay().send({
             from: accounts[0],
             value: paylimit}, 
