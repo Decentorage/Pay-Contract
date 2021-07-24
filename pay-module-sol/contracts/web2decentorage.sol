@@ -11,7 +11,7 @@ contract web2decentorage {
     function web2decentorage(uint _userValue) public {
         userValue = _userValue;
         decentorage = msg.sender;   //decentorage ID that will manage this contract
-        percentage = 5;
+        percentage = 25;
     }
     
     // frontend (done)
