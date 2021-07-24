@@ -9,13 +9,13 @@ import url from '../../url';
 
 function Storage() {
     const history = useHistory();
+    let availability = 0;
     useEffect(() => {
         if(localStorage.getItem('accessToken') === null){
             history.push('/');
             return;
         }
         getContracts();
-        alert("you have signed in");
     }, []);
 
     const [contracts, setContracts] = useState([]);
@@ -29,31 +29,32 @@ function Storage() {
     }
 
     const getContracts = () => {
-        axios.get(url + '/user/getFiles',{
+        axios.get(url + '/storage/getStorageInfo',{
             headers: {
               'token': `${localStorage.getItem('accessToken')}`
             }
           }).then((response) => {
-            const contracts = response.data;
+            const contracts = response.data["contracts_info"];
+            availability = response.data["availability"];
             // setContracts(contracts);
             const itemRows = [];
             for (let contract of contracts) {
-              const row = (
-                <div className="row2">
-                    <div className="cell" data-title="filename">
-                        {contract.filename}
-                    </div>
-                    <div className="cell" data-title="size (in KB)">
-                        {contract.size}
-                    </div>
-                    <div className="cell" data-title="download count">
-                        {contract.download_count}
-                    </div>
-                    <div className="cell" data-title="duration in months">
-                        {contract.duration_in_months}
-                    </div>
-                </div>
-                
+                console.log(contract.shard_id)
+                const row = (
+                <Row className="row2">
+                    <Col sm={3} className="cell" data-title="filename">
+                        <p>{contract.shard_id}</p>
+                    </Col>
+                    <Col sm={3} className="cell" data-title="size (in KB)">
+                        <p>{contract.payment_per_week}</p>
+                    </Col>
+                    <Col sm={3} className="cell" data-title="download count">
+                        <p>{contract.payment_left}</p>
+                    </Col>
+                    <Col sm={3} className="cell" data-title="duration in months">
+                        <p>{contract.next_payment_date}</p>
+                    </Col>
+                </Row>
               );
               itemRows.push(row);
             };
@@ -78,28 +79,33 @@ function Storage() {
             </Container>
         </Navbar>
         <Row>
-            <Col sm={12}>
+            <Col sm={6}>
                 <div className="pay-for-contract-button-container">
                     <h3>{localStorage.getItem('username')}</h3>
+                </div>
+            </Col>
+            <Col sm={6}>
+                <div className="pay-for-contract-button-container">
+                    <h3>availability: {availability}</h3>
                 </div>
             </Col>
         </Row>
         <div className="wrapper">
             <div className="table">
-                <div className="row2 header Navy-blue">
-                    <div className="cell">
-                        Filename
-                    </div>
-                    <div className="cell">
-                        Size (in KB)
-                    </div>
-                    <div className="cell">
-                        Download count
-                    </div>
-                    <div className="cell">
-                        Duration in months
-                    </div>
-                </div>
+                <Row className="row2 header Navy-blue">
+                    <Col sm={3} className="cell">
+                        <p>Filename</p>
+                    </Col>
+                    <Col sm={3} className="cell">
+                        <p>payment per week (wei)</p>
+                    </Col>
+                    <Col sm={3} className="cell">
+                        <p>payment left</p>
+                    </Col>
+                    <Col sm={3} className="cell">
+                        <p>next payment date</p>
+                    </Col>
+                </Row>
                 
                 {contracts}
 

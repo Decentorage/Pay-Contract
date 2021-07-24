@@ -26,7 +26,7 @@
 }
 
 .user-button:hover {
-background: #222158;
+    background: #222158;
 }
 
 .user-button.raised:hover {
@@ -62,7 +62,7 @@ background: #FDAB43;
 }
 
 .row2 {
-    display: table-row;
+    /* display: table-row; */
     background: #f6f6f6;
 }
 .row2:nth-of-type(odd) {
@@ -107,6 +107,10 @@ background: #FDAB43;
 .cell {
 padding: 6px 12px;
 display: table-cell;
+}
+
+.cell p {
+    word-break:break-all;
 }
 @media screen and (max-width: 580px) {
     .cell {

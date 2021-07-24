@@ -123,20 +123,20 @@ function User() {
             const itemRows = [];
             for (let contract of contracts) {
               const row = (
-                <div className="row2">
-                    <div className="cell" data-title="filename">
+                <Row className="row2">
+                    <Col sm={3} className="cell" data-title="filename">
                         {contract.filename}
-                    </div>
-                    <div className="cell" data-title="size (in KB)">
+                    </Col>
+                    <Col sm={3} className="cell" data-title="size (in KB)">
                         {calc(contract.size)}
-                    </div>
-                    <div className="cell" data-title="download count">
+                    </Col>
+                    <Col sm={3} className="cell" data-title="download count">
                         {contract.download_count}
-                    </div>
-                    <div className="cell" data-title="duration in months">
+                    </Col>
+                    <Col sm={3} className="cell" data-title="duration in months">
                         {contract.duration_in_months}
-                    </div>
-                </div>
+                    </Col>
+                </Row>
                 
               );
               itemRows.push(row);
@@ -157,14 +157,14 @@ function User() {
             localStorage.setItem('contractAddress', response.data["contract_address"])
             localStorage.setItem('price', response.data["price"])
             const row = (
-            <div className="row2">
-                <div className="cell" data-title="filename">
+            <Row className="row2">
+                <Col sm={6} className="cell" data-title="filename">
                     {contract.filename}
-                </div>
-                <div className="cell" data-title="pay button">
+                </Col>
+                <Col sm={6} className="cell" data-title="pay button">
                     <Button className="user-button" onClick={payForContract}>pay for this file contract</Button>
-                </div>
-            </div>
+                </Col>
+            </Row>
             );
             setPendding(row);
         }).catch(error => {
@@ -200,34 +200,34 @@ function User() {
         </Row>
         <div className="wrapper">
             <div className="table">
-                <div className="row2 header">
-                    <div className="cell">
+                <Row className="row2 header">
+                    <Col sm={6} className="cell">
                         Filename
-                    </div>
-                    <div className="cell">
+                    </Col>
+                    <Col sm={6} className="cell">
                         Pay button
-                    </div>
-                </div>
+                    </Col>
+                </Row>
                 
                 {pendding}
                 
             </div>
             
             <div className="table">
-                <div className="row2 header Navy-blue">
-                    <div className="cell">
+                <Row className="row2 header Navy-blue">
+                    <Col sm={3} className="cell">
                         Filename
-                    </div>
-                    <div className="cell">
+                    </Col>
+                    <Col sm={3} className="cell">
                         Size (in MB)
-                    </div>
-                    <div className="cell">
+                    </Col>
+                    <Col sm={3} className="cell">
                         Download count
-                    </div>
-                    <div className="cell">
+                    </Col>
+                    <Col sm={3} className="cell">
                         Duration in months
-                    </div>
-                </div>
+                    </Col>
+                </Row>
                 
                 {contracts}
 
