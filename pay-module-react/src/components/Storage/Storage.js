@@ -9,7 +9,6 @@ import url from '../../url';
 
 function Storage() {
     const history = useHistory();
-    let availability = 0;
     useEffect(() => {
         if(localStorage.getItem('accessToken') === null){
             history.push('/');
@@ -19,6 +18,9 @@ function Storage() {
     }, []);
 
     const [contracts, setContracts] = useState([]);
+    const [values, setValues] = useState({
+        availability: 0
+    });
 
     const logOut = (event) => {
         event.preventDefault();
@@ -28,6 +30,11 @@ function Storage() {
         history.push('/');
     }
 
+    function calc(size) {
+        var with2Decimals = size.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]
+        return with2Decimals;
+    }
+
     const getContracts = () => {
         axios.get(url + '/storage/getStorageInfo',{
             headers: {
@@ -35,7 +42,8 @@ function Storage() {
             }
           }).then((response) => {
             const contracts = response.data["contracts_info"];
-            availability = response.data["availability"];
+            values.availability = calc(response.data["availability"]);
+            setValues(values);
             // setContracts(contracts);
             const itemRows = [];
             for (let contract of contracts) {
@@ -86,7 +94,7 @@ function Storage() {
             </Col>
             <Col sm={6}>
                 <div className="pay-for-contract-button-container">
-                    <h3>availability: {availability}</h3>
+                    <h3>availability: {values.availability}</h3>
                 </div>
             </Col>
         </Row>
